@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { API_ROUTES } from '@/config/api.config';
+import { API_ROUTES } from '../../../../config/api.config';
 
 interface PaymentPageProps {
   params: {
