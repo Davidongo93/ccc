@@ -1,12 +1,13 @@
-import Navbar from "../../components/layout/navbar";
-import { 
-  Award, 
-  Heart, 
-  Leaf, 
-  Shield, 
-  ShoppingBag, 
-  Star 
+ // Start of Selection
+import {
+  Award,
+  Heart,
+  Leaf,
+  Shield,
+  ShoppingBag,
+  Star
 } from "lucide-react";
+import { Navbar } from "../../components/layout/navbar";
 
 export default function StyleGuidePage() {
   return (
