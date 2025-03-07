@@ -1,8 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { useCart } from '../../hooks/useCart';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
+import { useCart } from '../../hooks/useCart';
 
 interface Product {
   id: string;
@@ -30,6 +30,9 @@ export function ProductCard({ product }: { product: Product }) {
     setIsAdding(true);
     try {
       const variant = product.variants[0]; // Usando la primera variante por defecto
+      if (!variant) {
+        throw new Error('No hay variantes disponibles para este producto.');
+      }
       addToCart({
         variantId: variant.id,
         quantity: 1,

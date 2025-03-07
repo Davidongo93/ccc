@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { buildApiUrl } from '../config/api.config';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
+import { API_ROUTES } from '../config/api.config';
 
 interface CartItem {
   variantId: string;
@@ -106,7 +106,7 @@ export const useCart = (): UseCartReturn => {
         shippingAddress
       });
 
-      const response = await fetch(buildApiUrl('orders'), {
+      const response = await fetch(API_ROUTES.ORDERS.CREATE, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,7 +1,7 @@
 import {
-    HIDDEN_PRODUCT_TAG,
-    SHOPIFY_GRAPHQL_API_ENDPOINT,
-    TAGS,
+	HIDDEN_PRODUCT_TAG,
+	SHOPIFY_GRAPHQL_API_ENDPOINT,
+	TAGS,
 } from "lib/constants";
 import { isShopifyError } from "lib/type-guards";
 import { ensureStartsWith } from "lib/utils";
@@ -9,49 +9,49 @@ import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 import { type NextRequest, NextResponse } from "next/server";
 import {
-    addToCartMutation,
-    createCartMutation,
-    editCartItemsMutation,
-    removeFromCartMutation,
+	addToCartMutation,
+	createCartMutation,
+	editCartItemsMutation,
+	removeFromCartMutation,
 } from "./mutations/cart";
 import { getCartQuery } from "./queries/cart";
 import {
-    getCollectionProductsQuery,
-    getCollectionQuery,
-    getCollectionsQuery,
+	getCollectionProductsQuery,
+	getCollectionQuery,
+	getCollectionsQuery,
 } from "./queries/collection";
 import { getMenuQuery } from "./queries/menu";
 import { getPageQuery, getPagesQuery } from "./queries/page";
 import {
-    getProductQuery,
-    getProductRecommendationsQuery,
-    getProductsQuery,
+	getProductQuery,
+	getProductRecommendationsQuery,
+	getProductsQuery,
 } from "./queries/product";
 import type {
-    Cart,
-    Collection,
-    Connection,
-    Image,
-    Menu,
-    Page,
-    Product,
-    ShopifyAddToCartOperation,
-    ShopifyCart,
-    ShopifyCartOperation,
-    ShopifyCollection,
-    ShopifyCollectionOperation,
-    ShopifyCollectionProductsOperation,
-    ShopifyCollectionsOperation,
-    ShopifyCreateCartOperation,
-    ShopifyMenuOperation,
-    ShopifyPageOperation,
-    ShopifyPagesOperation,
-    ShopifyProduct,
-    ShopifyProductOperation,
-    ShopifyProductRecommendationsOperation,
-    ShopifyProductsOperation,
-    ShopifyRemoveFromCartOperation,
-    ShopifyUpdateCartOperation,
+	Cart,
+	Collection,
+	Connection,
+	Image,
+	Menu,
+	Page,
+	Product,
+	ShopifyAddToCartOperation,
+	ShopifyCart,
+	ShopifyCartOperation,
+	ShopifyCollection,
+	ShopifyCollectionOperation,
+	ShopifyCollectionProductsOperation,
+	ShopifyCollectionsOperation,
+	ShopifyCreateCartOperation,
+	ShopifyMenuOperation,
+	ShopifyPageOperation,
+	ShopifyPagesOperation,
+	ShopifyProduct,
+	ShopifyProductOperation,
+	ShopifyProductRecommendationsOperation,
+	ShopifyProductsOperation,
+	ShopifyRemoveFromCartOperation,
+	ShopifyUpdateCartOperation,
 } from "./types";
 
 const domain = process.env.SHOPIFY_STORE_DOMAIN
@@ -151,8 +151,8 @@ const reshapeCollection = (
 	};
 };
 
-const reshapeCollections = (collections: ShopifyCollection[]) => {
-	const reshapedCollections = [];
+const reshapeCollections = (collections: ShopifyCollection[]): Collection[] => {
+	const reshapedCollections: Collection[] = [];
 
 	for (const collection of collections) {
 		if (collection) {
@@ -206,8 +206,10 @@ const reshapeProduct = (
 	};
 };
 
+const reshapedProducts: Product[] = [];
+
 const reshapeProducts = (products: ShopifyProduct[]) => {
-	const reshapedProducts = [];
+	const reshapedProducts: Product[] = [];
 
 	for (const product of products) {
 		if (product) {

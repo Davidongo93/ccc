@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 interface CartItem {
   variantId: string;
@@ -31,12 +31,15 @@ export const useLocalCart = () => {
       if (existingItemIndex >= 0) {
         // Si el item ya existe, actualizar la cantidad
         const updatedItems = [...prevItems];
-        updatedItems[existingItemIndex].quantity += item.quantity;
+        const existingItem = updatedItems[existingItemIndex];
+        if (existingItem) {
+          existingItem.quantity += item.quantity;
+        }
         return updatedItems;
+      } else {
+        // Si es un nuevo item, añadirlo al array
+        return [...prevItems, item];
       }
-      
-      // Si es un nuevo item, añadirlo al array
-      return [...prevItems, item];
     });
   };
 

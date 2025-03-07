@@ -6,9 +6,7 @@ import { toast } from 'react-hot-toast';
 import { API_ROUTES } from '../../../../config/api.config';
 
 interface PaymentPageProps {
-  params: {
-    orderId: string;
-  };
+  params: Promise<{ orderId: string; }>;
 }
 
 export default function PaymentPage({ params }: PaymentPageProps) {
@@ -25,7 +23,8 @@ export default function PaymentPage({ params }: PaymentPageProps) {
         await new Promise(resolve => setTimeout(resolve, 2000));
         
         // Verificar el estado del pago
-        const response = await fetch(`${API_ROUTES.ORDERS}/payment-status/${params.orderId}`, {
+        const { orderId } = await params;
+        const response = await fetch(`${API_ROUTES.ORDERS}/payment-status/${orderId}`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
@@ -55,7 +54,7 @@ export default function PaymentPage({ params }: PaymentPageProps) {
     };
 
     processPayment();
-  }, [params.orderId, router]);
+  }, [params, router]);
 
   return (
     <div className="min-h-screen bg-gray-100 py-12">

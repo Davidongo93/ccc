@@ -1,16 +1,16 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
-import Image from 'next/image';
-import { toast } from 'react-hot-toast';
-import Link from "next/link"
-import { useRouter } from 'next/navigation';
-import { ShoppingBag, Trash2, Plus, Minus } from "lucide-react"
-import Navbar from "../../components/landing/navbar"
 import Footer from 'components/landing/footer';
+import { Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
+import Image from 'next/image';
+import Link from "next/link";
+import { useRouter } from 'next/navigation';
+import { useCallback, useEffect, useState } from 'react';
+import { toast } from 'react-hot-toast';
+import Navbar from "../../components/landing/navbar";
 import { API_ROUTES } from "../../config/api.config";
-import { useShopifyOrder } from "../../hooks/useShopifyOrder";
 import { useAuth } from "../../hooks/useAuth";
+import { useShopifyOrder } from "../../hooks/useShopifyOrder";
 
 interface StoredCartItem {
   variantId: string;
@@ -111,14 +111,28 @@ export default function CartPage() {
 
       // Ajustar cantidades si exceden el stock disponible
       const adjustedItems = updatedItems.map(item => {
-        if (item.quantity > (item.quantityAvailable || 0)) {
+        if (item && item.quantity > (item.quantityAvailable || 0)) {
           toast.error(`Stock insuficiente para ${item.title}. Se ajustó la cantidad al máximo disponible (${item.quantityAvailable}).`);
           return {
             ...item,
-            quantity: item.quantityAvailable || 0
-          };
+            quantity: item.quantityAvailable || 0,
+            variantId: item.variantId || '',
+            title: item.title || '',
+            price: item.price || 0,
+            image: item.image || '',
+            addedAt: item.addedAt || '',
+            productData: item.productData || { id: '', title: '', description: '', variants: [] }
+          } as StoredCartItem;
         }
-        return item;
+        return {
+          ...item,
+          variantId: item.variantId || '',
+          title: item.title || '',
+          price: item.price || 0,
+          image: item.image || '',
+          addedAt: item.addedAt || '',
+          productData: item.productData || { id: '', title: '', description: '', variants: [] }
+        } as StoredCartItem;
       });
 
       setCartItems(adjustedItems);
@@ -168,15 +182,28 @@ export default function CartPage() {
     if (newQuantity < 1) return;
     
     const item = cartItems[index];
+    if (!item) {
+      toast.error('El item no está disponible.');
+      return;
+    }
     if (newQuantity > (item.quantityAvailable || 0)) {
       toast.error(`Solo hay ${item.quantityAvailable} unidades disponibles de ${item.title}`);
       return;
     }
 
     const updatedItems = [...cartItems];
+    const itemToUpdate = updatedItems[index] || {
+      variantId: '',
+      title: '',
+      price: 0,
+      image: '',
+      addedAt: '',
+      productData: { id: '', title: '', variants: [] }
+    };
+
     updatedItems[index] = {
-      ...updatedItems[index],
-      quantity: newQuantity
+      ...itemToUpdate,
+      quantity: newQuantity,
     };
     
     setCartItems(updatedItems);

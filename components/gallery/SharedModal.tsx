@@ -1,10 +1,10 @@
 import {
-  ArrowDownTrayIcon,
-  ArrowTopRightOnSquareIcon,
-  ArrowUturnLeftIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  XMarkIcon
+    ArrowDownTrayIcon,
+    ArrowTopRightOnSquareIcon,
+    ArrowUturnLeftIcon,
+    ChevronLeftIcon,
+    ChevronRightIcon,
+    XMarkIcon
 } from '@heroicons/react/24/outline';
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
 import Image from 'next/image';
@@ -28,7 +28,7 @@ export default function SharedModal({
   const [loaded, setLoaded] = useState(false);
 
   const filteredImages = images?.filter((img: ImageProps) =>
-    range(index - 15, index + 15).includes(img.id)
+    range(index - 15, index + 15).includes(Number(img.id))
   );
 
   const handlers = useSwipeable({

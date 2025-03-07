@@ -1,10 +1,10 @@
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '../../hooks/useAuth';
 import { CartDrawer } from './CartDrawer';
 
 export function CartModal() {
   const { user } = useAuth();
 
   return (
-    <CartDrawer customerId={user?.shopifyCustomerId} />
+    <CartDrawer customerId={user?.shopifyCustomerId} isOpen={true} onClose={() => {}} />
   );
 } 

@@ -1,12 +1,12 @@
-import { Cloudinary } from 'cloudinary-core';
+import cloudinary from 'cloudinary';
 
-const cloudinary = new Cloudinary({
+cloudinary.v2.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
   secure: true
 });
 
 const getImageUrl = (publicId: string, width: number, height: number, format: string) => {
-  return cloudinary.url(publicId, {
+  return cloudinary.v2.url(publicId, {
     width,
     height,
     crop: 'scale',
@@ -15,3 +15,5 @@ const getImageUrl = (publicId: string, width: number, height: number, format: st
 };
 
 export default getImageUrl;
+
+export const v2 = cloudinary.v2;
