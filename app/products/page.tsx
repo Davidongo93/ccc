@@ -20,7 +20,7 @@ export default async function ProductsPage({
 }) {
 	const params = await searchParams;
 	const currentPage = Number(params.page) || 1;
-	const products = await getProducts({});
+	const products = await getProducts({ sortKey: 'id', reverse: false });
 	const filterOptions = getProductOptions(products);
 
 	const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
