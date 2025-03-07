@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+}
+
+@supports (font: -apple-system-body) and (-webkit-appearance: none) {
+  img[loading='lazy'] {
+    clip-path: inset(0.6px);
+  }
+}
+
+a,
+input,
+button {
+  @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-50 dark:focus-visible:ring-neutral-600 dark:focus-visible:ring-offset-neutral-900;
+}
+
+@keyframes dropdownFade {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Estilos para el PhoneInput */
+.react-tel-input .special-label {
+  display: none !important;
+}
+
+.react-tel-input .country-list {
+  animation: dropdownFade 0.3s ease-in-out;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
+  border-radius: 4px !important;
+  border: none !important;
+  margin-top: 8px !important;
+}
+
+.react-tel-input .country-list .country:hover {
+  background-color: rgba(47, 69, 13, 0.08) !important;
+}
+
+.react-tel-input .country-list .country.highlight {
+  background-color: rgba(47, 69, 13, 0.12) !important;
+}
