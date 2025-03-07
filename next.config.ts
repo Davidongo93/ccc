@@ -2,7 +2,7 @@
 
 const nextConfig = {
   experimental: {
-    serverActions: true,
+    serverActions: {},
   },
   images: {
     formats: ['image/avif', 'image/webp'],
