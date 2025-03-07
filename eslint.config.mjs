@@ -19,6 +19,7 @@ const eslintConfig = [
       '@typescript-eslint/no-explicit-any': 'off',
       'prefer-const': 'off',
       'react-hooks/exhaustive-deps': 'off',
+      '@typescript-eslint/explicit-module-boundary-types': 'off',
     },
   },
 ];
