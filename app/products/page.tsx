@@ -4,8 +4,6 @@ import { Pagination } from "../../components/product/Pagination";
 import { getProductOptions } from "../../components/product/ProductOptions";
 import FilteredProducts from "../../components/product/filtered-products";
 
-export const runtime = "edge";
-
 export const metadata = {
 	title: "Productos",
 	description: "Explora nuestra colección de productos",
@@ -20,7 +18,7 @@ export default async function ProductsPage({
 }) {
 	const params = await searchParams;
 	const currentPage = Number(params.page) || 1;
-	const products = await getProducts({ sortKey: 'id', reverse: false });
+	const products = await getProducts({ sortKey: 'ID', reverse: false });
 	const filterOptions = getProductOptions(products);
 
 	const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
