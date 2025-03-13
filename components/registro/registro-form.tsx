@@ -4,6 +4,7 @@ import type React from "react";
 import { useState } from "react";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/material.css";
+import "./phone-input.css";
 import { StyledInput } from "./styled-components";
 import { API_ROUTES } from "../../config/api.config";
 
@@ -21,15 +22,15 @@ export interface RegistroFormData {
 
 export default function RegistroForm() {
   const [formData, setFormData] = useState<RegistroFormData>({
-    nombre: "Juan Pérez",
-    telefono: "3001234567",
-    email: "juan@ejemplo.com",
-    password: "tucontraseña123",
-    confirmPassword: "tucontraseña123",
-    departamento: "Antioquia",
-    municipio: "Medellín",
-    calle: "Calle 123 #45-67",
-    codigoPostal: "050001",
+    nombre: "",
+    telefono: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    departamento: "",
+    municipio: "",
+    calle: "",
+    codigoPostal: "",
   });
 
   const [errors, setErrors] = useState<Partial<Record<keyof RegistroFormData, string>>>({});
@@ -196,11 +197,13 @@ export default function RegistroForm() {
           country="co"
           value={formData.telefono}
           onChange={handlePhoneChange}
+          containerClass="phone-input-hover"
           inputStyle={{
             width: "100%",
             height: "56px",
             borderColor: errors.telefono ? "#ef4444" : "rgba(0, 0, 0, 0.23)",
-            color: "black"
+            color: "black",
+            transition: "all 0.2s ease-in-out"
           }}
           containerStyle={{
             width: "100%",
@@ -209,20 +212,11 @@ export default function RegistroForm() {
             backgroundColor: "transparent",
             borderColor: errors.telefono ? "#ef4444" : "rgba(0, 0, 0, 0.23)",
             borderRadius: "4px 0 0 4px",
+            transition: "all 0.2s ease-in-out"
           }}
-          dropdownStyle={{
-            width: "300px",
-            animation: "dropdownFade 0.3s ease-in-out",
-            boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
-          }}
-          searchStyle={{
-            width: "100%",
-            margin: "0",
-            borderColor: "rgba(0, 0, 0, 0.23)",
-          }}
-          enableSearch
-          disableSearchIcon
-          searchPlaceholder="Buscar país..."
+          onlyCountries={["co"]}
+          disableDropdown={true}
+          countryCodeEditable={false}
           inputProps={{
             required: true,
             name: "telefono",

@@ -14,17 +14,26 @@ const PRODUCTS_PER_PAGE = 12; // Número de productos por página
 export default async function ProductsPage({
 	searchParams,
 }: {
-	searchParams: Promise<{ page?: string }>;
+	searchParams: Promise<{ page?: string; search?: string }>;
 }) {
 	const params = await searchParams;
 	const currentPage = Number(params.page) || 1;
+	const searchTerm = params.search || '';
 	const products = await getProducts({ sortKey: 'ID', reverse: false });
-	const filterOptions = getProductOptions(products);
 
-	const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
+	// Filtrar productos si hay un término de búsqueda
+	const filteredProducts = searchTerm
+		? products.filter((product) =>
+				product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+				product.description?.toLowerCase().includes(searchTerm.toLowerCase())
+		  )
+		: products;
+
+	const filterOptions = getProductOptions(filteredProducts);
+	const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
 	const startIndex = (currentPage - 1) * PRODUCTS_PER_PAGE;
 	const endIndex = startIndex + PRODUCTS_PER_PAGE;
-	const currentProducts = products.slice(startIndex, endIndex);
+	const currentProducts = filteredProducts.slice(startIndex, endIndex);
 
 	return (
 		<main 

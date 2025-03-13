@@ -1,0 +1,18 @@
+.phone-input-hover .form-control:hover {
+  border-color: #2f450d !important;
+}
+
+.phone-input-hover .form-control:focus {
+  border-color: #2f450d !important;
+  box-shadow: 0 0 0 2px rgba(47, 69, 13, 0.2) !important;
+  outline: 2px solid #2f450d !important;
+  outline-offset: 2px !important;
+}
+
+.phone-input-hover .flag-dropdown:hover {
+  border-color: #2f450d !important;
+}
+
+.phone-input-hover .selected-flag:hover {
+  background-color: transparent !important;
+} 
