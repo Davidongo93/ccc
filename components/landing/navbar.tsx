@@ -14,6 +14,7 @@ import { Menu, Search, ShoppingCart, User, X } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useState, useRef, useEffect } from "react"
+import { useRouter } from "next/navigation"
 
 /**
  * Navbar component that renders a navigation bar with links to different sections of the website.
@@ -26,8 +27,10 @@ const Navbar = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState("")
   const [cartItemsCount, setCartItemsCount] = useState(0)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
   const searchRef = useRef<HTMLDivElement>(null)
   const searchInputRef = useRef<HTMLInputElement>(null)
+  const router = useRouter()
   
   const updateCartCount = () => {
     const cart = localStorage.getItem('cart')
@@ -97,6 +100,52 @@ const Navbar = () => {
       localStorage.setItem = originalSetItem
     }
   }, [])
+
+  const checkAuthentication = () => {
+    const token = localStorage.getItem('token');
+    console.log('Token en localStorage:', token); // Debug log
+    setIsAuthenticated(!!token);
+  };
+
+  useEffect(() => {
+    // Verificar autenticación inicial
+    checkAuthentication();
+
+    // Verificar cada vez que el componente se monta o actualiza
+    const interval = setInterval(checkAuthentication, 1000);
+
+    // Verificar cuando la ventana obtiene el foco
+    const handleFocus = () => {
+      checkAuthentication();
+    };
+
+    // Verificar cuando hay cambios en localStorage
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'token') {
+        checkAuthentication();
+      }
+    };
+
+    window.addEventListener('focus', handleFocus);
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('authStateChanged', checkAuthentication);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('focus', handleFocus);
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('authStateChanged', checkAuthentication);
+    };
+  }, []);
+
+  const handleAuthClick = () => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      router.push('/profile');
+    } else {
+      router.push('/login');
+    }
+  };
 
   /**
    * Toggles the mobile menu open and closed.
@@ -178,12 +227,15 @@ const Navbar = () => {
                 </span>
               )}
             </Link>
-            <Link href="/login" className="text-gray-700 hover:text-green-600 relative group">
+            <button 
+              onClick={handleAuthClick}
+              className="text-gray-700 hover:text-green-600 relative group"
+            >
               <User className="h-6 w-6" />
               <span className="absolute top-full left-1/2 transform -translate-x-1/2 bg-green-600 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                Login
+                {isAuthenticated ? 'Mi Perfil' : 'Login'}
               </span>
-            </Link>
+            </button>
           </div>
 
           {/* Mobile menu button */}
@@ -235,9 +287,13 @@ const Navbar = () => {
               </div>
               <span>Carrito</span>
             </Link>
-            <Link href="/login" className="flex items-center px-3 py-2 text-gray-700 hover:text-green-600">
+            <button 
+              onClick={handleAuthClick}
+              className="flex items-center px-3 py-2 text-gray-700 hover:text-green-600 w-full text-left"
+            >
               <User className="h-6 w-6 mr-2" />
-            </Link>
+              <span>{isAuthenticated ? 'Mi Perfil' : 'Login'}</span>
+            </button>
           </div>
         </div>
       )}

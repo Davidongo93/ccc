@@ -28,15 +28,13 @@ export default function LoginForm() {
     const newErrors: Partial<Record<keyof LoginFormData, string>> = {};
 
     if (!formData.email) {
-      newErrors.email = "El correo electrónico es requerido";
+      newErrors.email = "El correo electrónico es obligatorio";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "El correo electrónico no es válido";
+      newErrors.email = "Ingresa un correo electrónico válido";
     }
 
     if (!formData.password) {
-      newErrors.password = "La contraseña es requerida";
-    } else if (formData.password.length < 8) {
-      newErrors.password = "La contraseña debe tener al menos 8 caracteres";
+      newErrors.password = "La contraseña es obligatoria";
     }
 
     setErrors(newErrors);
@@ -46,12 +44,10 @@ export default function LoginForm() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitError("");
-    setIsLoading(true);
-
+    
     if (validateForm()) {
+      setIsLoading(true);
       try {
-        console.log('Intentando login con: ', formData);
-        
         const response = await fetch(API_ROUTES.LOGIN, {
           method: 'POST',
           headers: {
@@ -64,19 +60,40 @@ export default function LoginForm() {
         const data = await response.json();
 
         if (!response.ok) {
-          console.log('Respuesta del servidor:', response.status);
-          console.error('Detalles del error:', data);
-          throw new Error(data.message || 'Error en el inicio de sesión');
+          let errorMessage = "Error al iniciar sesión";
+          
+          switch (response.status) {
+            case 401:
+              errorMessage = "Correo electrónico o contraseña incorrectos";
+              break;
+            case 422:
+              errorMessage = "Datos de inicio de sesión inválidos";
+              break;
+            case 429:
+              errorMessage = "Demasiados intentos fallidos. Por favor, espera unos minutos";
+              break;
+            default:
+              errorMessage = data.message || "Error al iniciar sesión";
+          }
+          
+          setSubmitError(errorMessage);
+          toast.error(errorMessage);
+          return;
         }
 
         // Guardar el token de acceso
         localStorage.setItem('token', data.access_token);
 
-        toast.success('Inicio de sesión exitoso');
+        // Disparar evento de cambio de autenticación
+        window.dispatchEvent(new Event('authStateChanged'));
+
+        toast.success('¡Bienvenido de nuevo!');
         router.push('/products');
       } catch (error) {
-        console.error('Error en login:', error);
-        setSubmitError(error instanceof Error ? error.message : 'Error al iniciar sesión');
+        // Manejo silencioso del error en consola
+        const errorMessage = "Error al conectar con el servidor. Por favor, intenta más tarde.";
+        setSubmitError(errorMessage);
+        toast.error(errorMessage);
       } finally {
         setIsLoading(false);
       }
@@ -89,21 +106,38 @@ export default function LoginForm() {
       ...prev,
       [name]: value,
     }));
-    if (errors[name as keyof LoginFormData]) {
-      setErrors((prev) => ({
-        ...prev,
-        [name]: "",
-      }));
+
+    const newErrors = { ...errors };
+    delete newErrors[name as keyof LoginFormData];
+
+    switch (name) {
+      case 'email':
+        if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+          newErrors.email = "Ingresa un correo electrónico válido";
+        }
+        break;
+      case 'password':
+        if (value && value.length < 8) {
+          newErrors.password = "La contraseña debe tener al menos 8 caracteres";
+        }
+        break;
     }
+
+    setErrors(newErrors);
   };
 
   return (
-    <form className="space-y-6" onSubmit={handleSubmit}>
+    <form className="space-y-6" onSubmit={handleSubmit} noValidate>
       {submitError && (
-        <div className="rounded-md bg-red-50 p-4">
+        <div className="rounded-md bg-red-50 p-4 border border-red-200">
           <div className="flex">
+            <div className="flex-shrink-0">
+              <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+              </svg>
+            </div>
             <div className="ml-3">
-              <h3 className="text-sm font-medium text-red-800">Error</h3>
+              <h3 className="text-sm font-medium text-red-800">Error de acceso</h3>
               <div className="mt-2 text-sm text-red-700">
                 <p>{submitError}</p>
               </div>
@@ -122,6 +156,7 @@ export default function LoginForm() {
         onChange={handleChange}
         error={!!errors.email}
         helperText={errors.email}
+        placeholder="ejemplo@correo.com"
       />
 
       <StyledInput
@@ -134,6 +169,8 @@ export default function LoginForm() {
         onChange={handleChange}
         error={!!errors.password}
         helperText={errors.password}
+        placeholder="Ingresa tu contraseña"
+        autoComplete="current-password"
       />
 
       <div className="flex items-center justify-between">

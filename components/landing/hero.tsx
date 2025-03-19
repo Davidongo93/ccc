@@ -1,58 +1,44 @@
 "use client";
 
-// Hero component renders the landing section with a background video and overlay text
+// Hero component renders the landing section with a background video
 const Hero = () => {
   return (
     <section id="inicio" className="relative h-[45vh] sm:h-[55vh] md:h-[65vh] lg:h-[85vh] w-full overflow-hidden">
-      <div className="absolute inset-0">
-        <iframe
-          src="https://player.vimeo.com/video/873767825?background=1&autoplay=1&loop=1&muted=1&controls=0"
-          className="video-background"
-          style={{
-            position: 'absolute',
-            top: '0',
-            left: '0',
-            width: '100%',
-            height: '100%',
-            border: 'none',
-            pointerEvents: 'none',
-            objectFit: 'fill',
-          }}
-          allow="autoplay; fullscreen"
-          loading="eager"
-          title="Background video"
-        />
-        <style jsx>{`
-          .video-background {
-            transform: scale(1.5);
-          }
-          
-          @media (max-width: 768px) {
-            .video-background {
-              transform: scale(2.2);
-            }
-          }
-          
-          @media (max-width: 480px) {
-            .video-background {
-              transform: scale(3);
-            }
-          }
+      <iframe
+        src="https://player.vimeo.com/video/873767825?background=1&autoplay=1&loop=1&muted=1&controls=0&quality=720p&autopause=0&dnt=1"
+        className="video-background absolute inset-0 w-full h-full border-0"
+        style={{
+          transform: 'scale(1.5)',
+        }}
+        allow="autoplay; fullscreen"
+        title="Background video"
+      />
 
-          @media (min-width: 768px) and (max-width: 1024px) {
-            .video-background {
-              transform: scale(2.5);
-            }
+      <style jsx>{`
+        @media (max-width: 768px) {
+          .video-background {
+            transform: scale(2.2) !important;
           }
-          
-          @media (min-width: 1920px) {
-            .video-background {
-              transform: scale(1.2);
-            }
+        }
+        
+        @media (max-width: 480px) {
+          .video-background {
+            transform: scale(3) !important;
           }
-        `}</style>
-        <div className="absolute inset-0 bg-black/40" />
-      </div>
+        }
+
+        @media (min-width: 768px) and (max-width: 1024px) {
+          .video-background {
+            transform: scale(2.5) !important;
+          }
+        }
+        
+        @media (min-width: 1920px) {
+          .video-background {
+            transform: scale(1.2) !important;
+          }
+        }
+      `}</style>
 
       <div className="relative z-10 flex h-full w-full items-end justify-center sm:justify-start p-4 sm:p-6 md:p-8 lg:p-16">
         <div className="mb-6 md:mb-8 max-w-[300px] sm:max-w-sm md:max-w-lg text-center sm:text-left sm:2xl:ml-24">
@@ -68,4 +54,5 @@ const Hero = () => {
     </section>
   );
 };
+
 export default Hero;
